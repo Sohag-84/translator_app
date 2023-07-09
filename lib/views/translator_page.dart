@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:translator/translator.dart';
 
 class TranslatorPage extends StatefulWidget {
   const TranslatorPage({super.key});
@@ -10,6 +11,20 @@ class TranslatorPage extends StatefulWidget {
 }
 
 class _TranslatorPageState extends State<TranslatorPage> {
+  final translator = GoogleTranslator();
+
+  void translate() async {
+    translator.translate("Hello world", from: 'en', to: 'bn').then((value) {
+      print(value);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    translate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
