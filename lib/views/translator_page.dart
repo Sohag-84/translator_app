@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:language_translator/constant/list.dart';
 import 'package:translator/translator.dart';
@@ -13,24 +15,43 @@ class TranslatorPage extends StatefulWidget {
 
 class _TranslatorPageState extends State<TranslatorPage> {
   final translator = GoogleTranslator();
+  bool isLoading = false;
   String from = 'en';
-  String to = 'hi';
+  String to = 'bn';
   String data = 'কেমন আছেন?';
-  String selectedvalue = 'English';
-  String selectedvalue2 = 'Bangla';
+  String selectedValue = 'English';
+  String selectedValue2 = 'Bangla';
   TextEditingController controller =
       TextEditingController(text: 'How are you?');
-  final formkey = GlobalKey<FormState>();
-  void translate() async {
-    translator.translate("Hello world", from: 'en', to: 'bn').then((value) {
-      print(value);
-    });
+  final formKey = GlobalKey<FormState>();
+
+  translate() async {
+    try {
+      if (formKey.currentState!.validate()) {
+        await translator
+            .translate(controller.text, from: from, to: to)
+            .then((value) {
+          data = value.text;
+          isLoading = false;
+          setState(() {});
+        });
+      }
+    } on SocketException catch (_) {
+      isLoading = true;
+      SnackBar mySnackBar = const SnackBar(
+        content: Text('Internet not Connected'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 5),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(mySnackBar);
+      setState(() {});
+    }
   }
 
   @override
-  void initState() {
-    super.initState();
-    translate();
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 
   @override
@@ -67,7 +88,7 @@ class _TranslatorPageState extends State<TranslatorPage> {
                   Text("From"),
                   SizedBox(width: 100),
                   DropdownButton(
-                    value: selectedvalue,
+                    value: selectedValue,
                     focusColor: Colors.transparent,
                     items: languages
                         .map(
@@ -93,17 +114,14 @@ class _TranslatorPageState extends State<TranslatorPage> {
                               } else if (lang == languages[8]) {
                                 from = languagesCode[8];
                               }
-                              setState(() {
-                                print(lang);
-                                print(from);
-                              });
+                              setState(() {});
                             },
                             child: Text(lang),
                           ),
                         )
                         .toList(),
                     onChanged: (value) {
-                      selectedvalue = value!;
+                      selectedValue = value!;
                     },
                   ),
                 ],
@@ -113,11 +131,12 @@ class _TranslatorPageState extends State<TranslatorPage> {
               padding: const EdgeInsets.all(20),
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                  color: Colors.blueGrey.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black)),
+                color: Colors.blueGrey.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.black),
+              ),
               child: Form(
-                key: formkey,
+                key: formKey,
                 child: TextFormField(
                   controller: controller,
                   maxLines: null,
@@ -130,14 +149,16 @@ class _TranslatorPageState extends State<TranslatorPage> {
                   },
                   textInputAction: TextInputAction.done,
                   decoration: const InputDecoration(
-                      enabledBorder: InputBorder.none,
-                      border: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      errorStyle: TextStyle(color: Colors.white)),
+                    enabledBorder: InputBorder.none,
+                    border: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    errorStyle: TextStyle(color: Colors.white),
+                  ),
                   style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ),
@@ -153,7 +174,7 @@ class _TranslatorPageState extends State<TranslatorPage> {
                   Text("To"),
                   SizedBox(width: 100),
                   DropdownButton(
-                    value: selectedvalue2,
+                    value: selectedValue2,
                     focusColor: Colors.transparent,
                     items: languages
                         .map(
@@ -179,22 +200,62 @@ class _TranslatorPageState extends State<TranslatorPage> {
                               } else if (lang == languages[8]) {
                                 to = languagesCode[8];
                               }
-                              setState(() {
-                                print(lang);
-                                print(to);
-                              });
+                              setState(() {});
                             },
                             child: Text(lang),
                           ),
                         )
                         .toList(),
                     onChanged: (value) {
-                      selectedvalue = value!;
+                      selectedValue2 = value!;
                     },
                   ),
                 ],
               ),
             ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.black),
+              ),
+              child: Center(
+                child: SelectableText(
+                  data,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: translate,
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll(Colors.indigo.shade900),
+                fixedSize: MaterialStatePropertyAll(Size(300, 45)),
+              ),
+              child: isLoading
+                  ? SizedBox.square(
+                      dimension: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      'Translate',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+            ),
+            SizedBox(height: 30)
           ],
         ),
       ),
