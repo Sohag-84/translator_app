@@ -1,16 +1,14 @@
-# language_translator
+# Language Translator App
 
 Language translator app in flutter
 
-## Getting Started
+## Key features
+✍️ Translate one language to another language
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Screen Shoot
+<p align="center">
+  <img width="350" height="700" src="https://github.com/Sohag-84/translator_app/assets/99319134/3e61c77b-5a80-44a3-8023-98080ce0c242">
+</p>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
