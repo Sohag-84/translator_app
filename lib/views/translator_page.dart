@@ -15,10 +15,12 @@ class _TranslatorPageState extends State<TranslatorPage> {
   final translator = GoogleTranslator();
   String from = 'en';
   String to = 'hi';
-  String data = 'आप कैसे हैं?';
+  String data = 'কেমন আছেন?';
   String selectedvalue = 'English';
-  String selectedvalue2 = 'Hindi';
-
+  String selectedvalue2 = 'Bangla';
+  TextEditingController controller =
+      TextEditingController(text: 'How are you?');
+  final formkey = GlobalKey<FormState>();
   void translate() async {
     translator.translate("Hello world", from: 'en', to: 'bn').then((value) {
       print(value);
@@ -91,7 +93,10 @@ class _TranslatorPageState extends State<TranslatorPage> {
                               } else if (lang == languages[8]) {
                                 from = languagesCode[8];
                               }
-                              setState(() {});
+                              setState(() {
+                                print(lang);
+                                print(from);
+                              });
                             },
                             child: Text(lang),
                           ),
@@ -100,7 +105,93 @@ class _TranslatorPageState extends State<TranslatorPage> {
                     onChanged: (value) {
                       selectedvalue = value!;
                     },
-                  )
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                  color: Colors.blueGrey.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.black)),
+              child: Form(
+                key: formkey,
+                child: TextFormField(
+                  controller: controller,
+                  maxLines: null,
+                  minLines: null,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(
+                      enabledBorder: InputBorder.none,
+                      border: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      errorStyle: TextStyle(color: Colors.white)),
+                  style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 40),
+              decoration: BoxDecoration(
+                color: Colors.indigo.shade100,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("To"),
+                  SizedBox(width: 100),
+                  DropdownButton(
+                    value: selectedvalue2,
+                    focusColor: Colors.transparent,
+                    items: languages
+                        .map(
+                          (lang) => DropdownMenuItem(
+                            value: lang,
+                            onTap: () {
+                              if (lang == languages[0]) {
+                                to = languagesCode[0];
+                              } else if (lang == languages[1]) {
+                                to = languagesCode[1];
+                              } else if (lang == languages[2]) {
+                                to = languagesCode[2];
+                              } else if (lang == languages[3]) {
+                                to = languagesCode[3];
+                              } else if (lang == languages[4]) {
+                                to = languagesCode[4];
+                              } else if (lang == languages[5]) {
+                                to = languagesCode[5];
+                              } else if (lang == languages[6]) {
+                                to = languagesCode[6];
+                              } else if (lang == languages[7]) {
+                                to = languagesCode[7];
+                              } else if (lang == languages[8]) {
+                                to = languagesCode[8];
+                              }
+                              setState(() {
+                                print(lang);
+                                print(to);
+                              });
+                            },
+                            child: Text(lang),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      selectedvalue = value!;
+                    },
+                  ),
                 ],
               ),
             ),
