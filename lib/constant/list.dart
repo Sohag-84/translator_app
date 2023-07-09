@@ -1,7 +1,7 @@
 List<String> languages = [
   'English',
-  'Bangla'
-      'Hindi',
+  'Bangla',
+  'Hindi',
   'Arabic	',
   'German',
   'Russian',
